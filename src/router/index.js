@@ -1,26 +1,45 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
+import LoginUser from "@/views/users/LoginUser.vue";
+import RegisterUser from "@/views/users/RegisterUser.vue";
+import store from "@/store"; // Importa el store para acceder a él
+import HomeView from "@/views/HomeView.vue";
 
 const routes = [
   {
-    path: "/",
+    path: "",
     name: "home",
     component: HomeView,
+    children: [
+      { path: "/login", name: "Login", component: LoginUser },
+      { path: "/register", name: "Register", component: RegisterUser },
+    ],
   },
   {
-    path: "/about",
-    name: "about",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
+    path: "/dashboard",
+    name: "dashboard",
+    component: () => import("../views/dashboard/CreateActivity.vue"),
+    meta: { requiresAuth: true }, // Ruta protegida
+  },
+  {
+    path: "/ranking",
+    name: "ranking",
+    component: () => import("../views/dashboard/RankingUser.vue"),
+    meta: { requiresAuth: true }, // Ruta protegida
   },
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  //const isAuthenticated = store.getters.getUser.token; // Accede al store correctamente
+  if (to.meta.requiresAuth && !store.getters.getUser.token) {
+    next({ path: "/login" }); // Redirecciona correctamente a la página de login
+  } else {
+    next();
+  }
 });
 
 export default router;
