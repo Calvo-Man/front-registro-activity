@@ -15,7 +15,7 @@
     margin: 0 2rem 0 20%;
   }
   .bg-color {
-    background-color: rgb(11, 10, 77);
+    background-image: linear-gradient(to bottom, #020818, #2155b6);
   }
   header {
     display: flex;

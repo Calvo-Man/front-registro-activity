@@ -82,7 +82,6 @@ export default {
       }
     },
     async fetchMachinesByCategory(id) {
-
       const findCategory = this.exercises.find(exercise => exercise.id === id).machineCategory.category
       try {
         if (this.exercises) {

@@ -57,23 +57,27 @@ export default {
   }),
   methods: {
     async register() {
-
       const numericAge = parseInt(this.age, 10);
       const numericHeight = parseInt(this.height, 10);
       const numericWeight = parseInt(this.weight, 10);
 
-
-      // Lógica para el registro de usuario
-      await axios.post(`http://localhost:3000/auth/register`, {
-        name: this.name,
-        age: numericAge,
-        height: numericHeight,
-        weight: numericWeight,
-        email: this.email,
-        password: this.password,
-        role: 3
-      })
-      alert('Registration successful!')
+      try {
+        // Lógica para el registro de usuario
+        await axios.post(`http://localhost:3000/auth/register`, {
+          name: this.name,
+          age: numericAge,
+          height: numericHeight,
+          weight: numericWeight,
+          email: this.email,
+          password: this.password,
+          role: 3
+        })
+        alert('Registration successful!')
+        this.$router.push({ name: "Login" });
+      } catch (error) {
+        console.log(error);
+        alert('Error registering user');
+      }
 
     },
 
