@@ -9,7 +9,7 @@
     >
       <template #title>
         <span class="font-weight-black text-blue-lighten-4"
-          >Welcome to our music reproductor</span
+          >Welcome to our gym</span
         >
       </template>
 

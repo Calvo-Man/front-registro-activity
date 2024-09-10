@@ -1,6 +1,9 @@
 <!-- eslint-disable prettier/prettier -->
+
+<!-- eslint-disable prettier/prettier -->
 <template>
-  <v-container class="mx-auto mt-5 text-center bg-indigo-darken-4 rounded" width="500">
+  <header>
+  <v-container class="mx-aut mt-5 text-center bg-indigo-darken-4 rounded" width="500" height="580">
     <p class="font-weight-black text-blue-lighten-4 mb-4">Create activity</p>
     <v-form fast-fail submit.prevent>
       <v-select v-model="selectedExercise" @update:modelValue="fetchMachinesByCategory" :items="exercises"
@@ -15,9 +18,11 @@
       <v-text-field type="datetime-local" v-model="start_date" label="Select start date"></v-text-field>
       <v-text-field type="datetime-local" v-model="end_date" label="Select end date"></v-text-field>
 
-      <v-btn class="mt-8 text-blue-lighten-4 bg-black" type="submit" @click="register">Register</v-btn>
+      <v-btn class="mt-3 text-blue-lighten-4 bg-black" type="submit"  @click="register">Register</v-btn>
     </v-form>
   </v-container>
+  <RankingWeekly />
+  </header>
 </template>
 <!-- eslint-disable prettier/prettier -->
 
@@ -25,7 +30,10 @@
 import axios from 'axios';
 import store from "@/store";
 
+import RankingWeekly from '@/components/RankingWeekly.vue';
+
 export default {
+  components: { RankingWeekly },
   data: () => (
     {
       exercises: [],
@@ -72,6 +80,8 @@ export default {
 
       )
       alert('Activity registered successfully!')
+      this.fetchExercises();
+      
     },
     async fetchExercises() {
       try {
