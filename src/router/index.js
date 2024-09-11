@@ -26,6 +26,18 @@ const routes = [
     component: () => import("../views/dashboard/RankingUser.vue"),
     meta: { requiresAuth: true }, // Ruta protegida
   },
+  {
+    path: "/ranking/duration",
+    name: "rankingDuration",
+    component: () => import("../views/dashboard/RankingUser.vue"),
+    meta: { requiresAuth: true }, // Ruta protegida
+  },
+  {
+    path: "/ranking/reps",
+    name: "rankingReps",
+    component: () => import("../views/dashboard/RankingByReps.vue"),
+    meta: { requiresAuth: true }, // Ruta protegida
+  },
 ];
 
 const router = createRouter({

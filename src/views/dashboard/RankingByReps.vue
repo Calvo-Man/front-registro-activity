@@ -2,18 +2,18 @@
 <template>
     <NavBar />
     <div class="rounded mt-10 mx-7" style="display: flex; justify-content: center">
-        <RankingWeekly />
-        <RankingByMachine />
+        <RankingWeeklyReps />
+        <RankingByMachineReps />
     </div>
 </template>
 <!-- eslint-disable prettier/prettier -->
 <script>
 import axios from 'axios';
-import store from "@/store";
-
-import RankingByMachine from '@/components/RankingByMachine.vue';
+import store from "@/store"
 import { Chart, registerables } from "chart.js";
-import RankingWeekly from '@/components/RankingWeekly.vue';
+
+import RankingWeeklyReps from '@/components/RankingWeeklyReps.vue';
+import RankingByMachineReps from '@/components/rankingByMachineReps.vue';
 import NavBar from '@/components/NavBar.vue';
 
 // Define el plugin personalizado
@@ -36,7 +36,7 @@ Chart.register(...registerables);
 Chart.defaults.color = "white";
 export default {
     name: 'RankingUser',
-    components: { RankingWeekly, RankingByMachine,NavBar },
+    components: { RankingWeeklyReps, RankingByMachineReps,NavBar},
 
 
     data: () => ({
@@ -47,7 +47,7 @@ export default {
         chartData: {
             labels: [],
             datasets: [{
-                label: 'Daily progress by duration (minutes)',
+                label: 'Daily progress by duration',
                 data: [],
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',

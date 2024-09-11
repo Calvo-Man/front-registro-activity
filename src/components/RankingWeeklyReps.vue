@@ -1,20 +1,27 @@
 <!-- eslint-disable prettier/prettier -->
 <template>
-    <NavBar />
-    <div class="rounded mt-10 mx-7" style="display: flex; justify-content: center">
-        <RankingWeekly />
-        <RankingByMachine />
+    <div class="rounded mt-5 mx-7 bg-color" style="justify-content: center">
+        <v-form fast-fail submit.prevent>
+            <v-select v-model="rangeSelected" @update:modelValue="fetchActivities" :items="range" item-title="name"
+                item-value="name" label="Select range">
+            </v-select>
+
+        </v-form>
+        <BarChart :chartData="chartData" :chartOptions="chartOptions" />
     </div>
 </template>
+<!-- eslint-disable prettier/prettier -->
+<style scoped>
+.bg-color {
+    background-image: linear-gradient(to bottom, #2155b6, #020818);
+}
+</style>
 <!-- eslint-disable prettier/prettier -->
 <script>
 import axios from 'axios';
 import store from "@/store";
-
-import RankingByMachine from '@/components/RankingByMachine.vue';
+import { BarChart } from 'vue-chart-3';
 import { Chart, registerables } from "chart.js";
-import RankingWeekly from '@/components/RankingWeekly.vue';
-import NavBar from '@/components/NavBar.vue';
 
 // Define el plugin personalizado
 const plugin = {
@@ -35,19 +42,23 @@ const plugin = {
 Chart.register(...registerables);
 Chart.defaults.color = "white";
 export default {
-    name: 'RankingUser',
-    components: { RankingWeekly, RankingByMachine,NavBar },
+    name: 'RankingWeeklyReps',
+    components: { BarChart },
 
 
     data: () => ({
         activities: [],
-        durations: [],
+        repss: [],
         labelsDate: [],
+        range: ['Daily', 'Weekly'],
+        category: ['reps', 'Reps'],
+        rangeSelected: [],
+        totalReps: null,
         user: store.getters.getUser.id, // Obtener el usuario desde el store
         chartData: {
             labels: [],
             datasets: [{
-                label: 'Daily progress by duration (minutes)',
+                label: null,
                 data: [],
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
@@ -88,33 +99,58 @@ export default {
         }
     }),
     mounted() {
-        this.fetchActivities();
+        this.fetchActivities('Daily');
 
         Chart.register(plugin); // Registrar el plugin personalizado
     },
     methods: {
-        async fetchActivities() {
+        async fetchActivities(range) {
             try {
-                const response = await axios.get(`http://localhost:3000/activities/user/${this.user}`);
-                this.activities = response.data;
-                this.lastestDurationByDay();
+                if (range !== 'Weekly') {
+                    this.chartData.datasets[0].data = [];
+                    const response = await axios.get(`http://localhost:3000/activities/user/${this.user}`);
+                    this.activities = response.data;
+                    this.lastestrepsByDay();
+                } else {
+
+                    const response = await axios.get(`http://localhost:3000/activities/user/${this.user}/weekly`);
+                    this.activities = response.data;
+                    this.lastestrepsByWeek()
+                }
+
             } catch (error) {
                 console.error('Error fetching activities:', error);
             }
         },
-        async lastestDurationByDay() {
+        async lastestrepsByDay() {
+
             this.findSameDay = this.activities.map(activity => new Date(activity.start_date).toISOString().split('T')[0]);
             this.labelsDate = this.findSameDay.filter((date, index) => this.findSameDay.indexOf(date) === index);
             this.chartData.labels = this.labelsDate;
 
+            this.chartData.datasets[0].label = `Daily progress by reps`;
+
             for (let i = 0; i < this.labelsDate.length; i++) {
                 const activitiesByDay = this.activities.filter(activity => new Date(activity.start_date).toISOString().split('T')[0] === this.labelsDate[i]);
-                const totalDuration = activitiesByDay.reduce((sum, activity) => sum + activity.duration, 0);
-                this.chartData.datasets[0].data[i] = totalDuration;
+                const totalReps = activitiesByDay.reduce((sum, activity) => sum + activity.reps, 0);
+                this.chartData.datasets[0].data[i] = totalReps;
+                this.suma += totalReps;
             }
 
+        },
+        async lastestrepsByWeek() {
 
-        }
+            this.addWeeks = this.activities.map(activity => activity.week_number);
+            this.chartData.labels = this.addWeeks;
+
+
+            this.addTotalReps = this.activities.map(activity => activity.reps);
+            this.chartData.datasets[0].data = this.addTotalReps;
+            this.chartData.datasets[0].label = 'Weekly progress by reps';
+
+
+        },
+
     }
 };
 </script>

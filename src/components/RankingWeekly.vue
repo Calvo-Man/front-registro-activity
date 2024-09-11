@@ -5,9 +5,7 @@
             <v-select v-model="rangeSelected" @update:modelValue="fetchActivities" :items="range" item-title="name"
                 item-value="name" label="Select range">
             </v-select>
-            <v-select v-model="categorySelected" @update:modelValue="fetchActivitie" :items="category" item-title="name"
-                item-value="id" label="Select category">
-            </v-select>
+
         </v-form>
         <BarChart :chartData="chartData" :chartOptions="chartOptions" />
     </div>
@@ -53,11 +51,8 @@ export default {
         durations: [],
         labelsDate: [],
         range: ['Daily', 'Weekly'],
-        category:['Duration','Reps'],
+        category: ['Duration', 'Reps'],
         rangeSelected: [],
-        categorySelected:[],
-        suma: null,
-        promDuration: null,
         totalDuration: null,
         user: store.getters.getUser.id, // Obtener el usuario desde el store
         chartData: {
@@ -117,10 +112,10 @@ export default {
                     this.activities = response.data;
                     this.lastestDurationByDay();
                 } else {
-                    
+
                     const response = await axios.get(`http://localhost:3000/activities/user/${this.user}/weekly`);
                     this.activities = response.data;
-                    this.lastestDurationByWeek()            
+                    this.lastestDurationByWeek()
                 }
 
             } catch (error) {
@@ -128,11 +123,12 @@ export default {
             }
         },
         async lastestDurationByDay() {
+
             this.findSameDay = this.activities.map(activity => new Date(activity.start_date).toISOString().split('T')[0]);
             this.labelsDate = this.findSameDay.filter((date, index) => this.findSameDay.indexOf(date) === index);
             this.chartData.labels = this.labelsDate;
 
-            this.chartData.datasets[0].label = 'Daily progress by duration (minutes)';
+            this.chartData.datasets[0].label = `Daily progress by Duration (minutes)`;
 
             for (let i = 0; i < this.labelsDate.length; i++) {
                 const activitiesByDay = this.activities.filter(activity => new Date(activity.start_date).toISOString().split('T')[0] === this.labelsDate[i]);
@@ -141,21 +137,20 @@ export default {
                 this.suma += totalDuration;
             }
 
-            const promDuration = this.suma / ((this.labelsDate.length))
-
-            return promDuration;
         },
-        async lastestDurationByWeek(){
-            
+        async lastestDurationByWeek() {
+
             this.addWeeks = this.activities.map(activity => activity.week_number);
             this.chartData.labels = this.addWeeks;
 
-            this.addTotalDuration = this.activities.map(activity => activity.total_duration);
-            this.chartData.datasets[0].data = this.addTotalDuration;
 
+            this.addTotalDuration = this.activities.map(activity => activity.duration);
+            this.chartData.datasets[0].data = this.addTotalDuration;
             this.chartData.datasets[0].label = 'Weekly progress by duration (minutes)';
+
+
         },
-       
+
     }
 };
 </script>
