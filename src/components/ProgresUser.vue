@@ -49,15 +49,13 @@ export default {
             const response = await axios.get(`http://localhost:3000/activities/user/${this.user}/today`);
             this.activiesToday = response.data;
 
-            if(this.value <= 100){
+            if(this.value >= 100){
+                return 100;
+            }else{
                 const sumToday = this.activiesToday.reduce((sum, activity) => sum + activity.duration, 0);
                 const value = Math.round((sumToday/ this.averageDuration) * 100);
-                return value;
-            }else{
-                return 100;
+                return value;    
             }
-            
-            
         },
 
         async averageDailyDuration() {

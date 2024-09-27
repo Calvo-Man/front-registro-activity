@@ -70,7 +70,7 @@ export default {
           weight: numericWeight,
           email: this.email,
           password: this.password,
-          role: 3
+          role: 1
         })
         alert('Registration successful!')
         this.$router.push({ name: "Login" });

@@ -63,7 +63,6 @@ export default {
       const numericReps = parseInt(this.reps, 10);
       const numericWeight = parseInt(this.lifted_weight, 10);
 
-
       // Lógica para el registro de actividad
       await axios.post(`http://localhost:3000/activities`, {
         userId: this.user,

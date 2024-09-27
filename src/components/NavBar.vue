@@ -9,18 +9,25 @@
   
         <!-- Elementos del menú -->
         <v-btn class="text-white" text to="/dashboard">Inicio</v-btn>
+        <v-btn class="text-white" text to="/create-activity">Create</v-btn>
         <v-btn class="text-white" text to="/ranking/duration">Duration</v-btn>
         <v-btn class="text-white" text to="/ranking/reps">Reps</v-btn>
   
         <!-- Ícono para acciones adicionales, como iniciar sesión -->
         <v-btn icon>
-          <v-icon class="text-white">mdi-account</v-icon>
+          <v-icon class="text-white" @click="logout">mdi-logout</v-icon>
         </v-btn>
       </v-app-bar>
   </template>
 <!-- eslint-disable prettier/prettier -->
   <script>
   export default {
-    name: "NavBar"
+    name: "NavBar",
+    methods:{
+      logout() {
+      this.$store.commit("destroyUser")
+      this.$router.push({ path: "/login"});
+    }
+    }
   };
   </script>

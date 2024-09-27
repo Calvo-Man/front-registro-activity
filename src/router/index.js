@@ -17,6 +17,12 @@ const routes = [
   {
     path: "/dashboard",
     name: "dashboard",
+    component: () => import("../views/dashboard/DashBoard.vue"),
+    meta: { requiresAuth: true }, // Ruta protegida
+  },
+  {
+    path: "/create-activity",
+    name: "create-activity",
     component: () => import("../views/dashboard/CreateActivity.vue"),
     meta: { requiresAuth: true }, // Ruta protegida
   },
@@ -37,6 +43,12 @@ const routes = [
     name: "rankingReps",
     component: () => import("../views/dashboard/RankingByReps.vue"),
     meta: { requiresAuth: true }, // Ruta protegida
+  },
+  {
+    path: "/ranking/global",
+    name: "rankingGlobal",
+    component: () => import("../views/dashboard/RankingGlobal.vue"),
+    meta: { requiresAuth: false },
   },
 ];
 
